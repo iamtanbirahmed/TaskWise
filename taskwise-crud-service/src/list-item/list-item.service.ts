@@ -1,26 +1,56 @@
-import { Injectable } from "@nestjs/common";
+import { Injectable, Logger } from "@nestjs/common";
 import { CreateListItemDto } from "./dto/create-list-item.dto";
 import { UpdateListItemDto } from "./dto/update-list-item.dto";
-
+import { InjectModel } from "@nestjs/mongoose";
+import { Model } from "mongoose";
+import { ListItem, ListItemDocument } from "./schemas/list-item.schema";
 @Injectable()
 export class ListItemService {
-  create(createListItemDto: CreateListItemDto) {
-    return "This action adds a new listItem";
+  private logger: Logger = new Logger(ListItemService.name);
+  constructor(@InjectModel(ListItem.name) private readonly listItemModel: Model<ListItemDocument>) {}
+
+  async create(createListItemDto: CreateListItemDto) {
+    const createData = {
+      title: createListItemDto.title,
+      description: createListItemDto.description,
+      listId: createListItemDto.listId,
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    };
+    const createListItem = new this.listItemModel(createData);
+    return createListItem.save();
   }
 
-  findAll() {
-    return `This action returns all listItem`;
+  async findAll(listId: string) {
+    this.logger.debug(` listId: ${JSON.stringify(listId)}`);
+    const data = await this.listItemModel
+      .find({
+        listId: listId,
+      })
+      .exec();
+    const response = {
+      data: data,
+      message: data.length,
+    };
+    return response;
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} listItem`;
+  async findOne(id: string) {
+    return this.listItemModel.findById(id);
   }
 
-  update(id: number, updateListItemDto: UpdateListItemDto) {
-    return `This action updates a #${id} listItem`;
+  async update(id: string, updateListItemDto: UpdateListItemDto) {
+    this.logger.debug(` Updatedto: ${JSON.stringify(updateListItemDto)}`);
+    const updateData = {
+      title: updateListItemDto.title,
+      description: updateListItemDto.description,
+      listId: updateListItemDto.listId,
+      updatedAt: new Date(),
+    };
+    return await this.listItemModel.findByIdAndUpdate(id, updateData, { new: true }).exec(); // return the updated document instead of the original one.
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} listItem`;
+  async remove(id: number): Promise<ListItem | null> {
+    return this.listItemModel.findByIdAndDelete(id).exec();
   }
 }

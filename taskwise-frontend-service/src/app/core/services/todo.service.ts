@@ -20,6 +20,12 @@ export class TodoService {
     );
   }
 
+  getTodoDetails(todoId: string | null) {
+    return this.http.get<IResponse<any>>(
+      `${apiEndpoint.TodoEndpoint.getTodoDetails}/${todoId}`
+    );
+  }
+
   addTodo(data: ITodo): Observable<IResponse<ITodo>> {
     return this.http.post<IResponse<ITodo>>(
       `${apiEndpoint.TodoEndpoint.addTodo}`,

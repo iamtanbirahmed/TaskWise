@@ -27,6 +27,10 @@ export class ListController {
   async findOne(@Param("id") id: string) {
     return this.listService.findOne(id);
   }
+  @Get("/details/:id")
+  async findDetails(@Param("id") id: string) {
+    return this.listService.findListDetails(id);
+  }
 
   @Patch(":id")
   async update(@Param("id") id: string, @Body() updateListDto: UpdateListDto) {

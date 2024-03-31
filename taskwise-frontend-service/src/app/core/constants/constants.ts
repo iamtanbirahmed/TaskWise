@@ -11,8 +11,14 @@ export const apiEndpoint = {
     loggedUser: `${apiurl}/user`,
   },
   TodoEndpoint: {
+    getTodoDetails: `${apiurl}/list/details`,
     getAllTodo: `${apiurl}/list`,
     addTodo: `${apiurl}/list`,
     updateTodo: `${apiurl}/list`,
+  },
+  TodoItemEndpoint: {
+    getAllTodoItem: `${apiurl}/list-item`,
+    addTodoItem: `${apiurl}/list-item`,
+    updateTodoItem: `${apiurl}/list-item`,
   },
 };

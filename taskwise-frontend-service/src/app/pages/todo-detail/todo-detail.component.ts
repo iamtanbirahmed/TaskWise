@@ -11,6 +11,8 @@ import {
   FormBuilder,
   ReactiveFormsModule,
 } from "@angular/forms";
+import { TodoService } from "../../core/services/todo.service";
+import { ITodo } from "../../core/models/todo.model";
 
 @Component({
   selector: "app-todo-detail",
@@ -23,10 +25,12 @@ export class TodoDetailComponent {
   todoId: string | null = null;
   currentTodoItemId: string | null = null;
   todoItems: ITodoItem[] = [];
-  todo: ITodoItem | null = null;
+  todoItem: ITodoItem | null = null;
+  todo: ITodo | null = null;
   isSlidePanelOpen = false;
   todoForm!: FormGroup;
   constructor(
+    private todoService: TodoService,
     private todoItemsService: TodoItemService,
     private router: ActivatedRoute,
     private fb: FormBuilder
@@ -43,9 +47,17 @@ export class TodoDetailComponent {
   }
 
   getTodoDetails() {
-    this.todoItemsService.getAllTodoItems(this.todoId).subscribe({
+    this.todoService.getTodoDetails(this.todoId).subscribe({
       next: (response) => {
-        this.todoItems = response.data;
+        const data = response.data;
+        this.todo = {
+          _id: data["_id"],
+          title: data["title"],
+          description: data["description"],
+          status: data["status"],
+        };
+        console.log(response.data);
+        this.todoItems = response.data["items"];
       },
     });
   }
@@ -72,9 +84,14 @@ export class TodoDetailComponent {
   onSubmit() {
     if (this.todoForm.valid) {
       // checking if this an edit or create request
+      const submitData: ITodoItem = {
+        title: this.todoForm.value.title,
+        description: this.todoForm.value.description,
+        listId: this.todoId!!,
+      };
       if (this.currentTodoItemId) {
         this.todoItemsService
-          .updateTodoItem(this.currentTodoItemId, this.todoForm.value)
+          .updateTodoItem(this.currentTodoItemId, submitData)
           .subscribe({
             next: (response) => {
               console.log(response);
@@ -83,7 +100,7 @@ export class TodoDetailComponent {
             },
           });
       } else {
-        this.todoItemsService.addTodoItem(this.todoForm.value).subscribe({
+        this.todoItemsService.addTodoItem(submitData).subscribe({
           next: (response) => {
             console.log(response);
             this.getTodoDetails();

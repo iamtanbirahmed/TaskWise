@@ -1,14 +1,17 @@
 <div class="flex flex-col">
     <div class="flex justify-between items-center">
-        <h2 class="font-bold text-xl">{{todoId}}</h2>
+        <h2 class="font-bold text-xl">{{todo?.title}}</h2>
         <button class="btn btn-icon btn-rounded btn-primary" (click)="openSlidePanel()">
             <i class="ri-add-line ri-lg"></i>
             Add Todo Item
         </button>
     </div>
 </div>
-<div class="mt-3 bg-white shadow">
+<hr>
 
+<h2 class="font-bold text-l">List Of Items</h2>
+<div class="mt-3 bg-white shadow">
+    
     @for(item of todoItems; track $index){
         <app-todo-item-card [item]="item" (editItemClicked)="onLoadTodoForm($event)"></app-todo-item-card>
     }

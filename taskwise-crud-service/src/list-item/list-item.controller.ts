@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from "@nestjs/common";
+import { Controller, Get, Post, Body, Patch, Param, Delete, ValidationPipe, Query } from "@nestjs/common";
 import { ListItemService } from "./list-item.service";
 import { CreateListItemDto } from "./dto/create-list-item.dto";
 import { UpdateListItemDto } from "./dto/update-list-item.dto";
@@ -8,27 +8,27 @@ export class ListItemController {
   constructor(private readonly listItemService: ListItemService) {}
 
   @Post()
-  create(@Body() createListItemDto: CreateListItemDto) {
+  async create(@Body() createListItemDto: CreateListItemDto) {
     return this.listItemService.create(createListItemDto);
   }
 
   @Get()
-  findAll() {
-    return this.listItemService.findAll();
+  async findAll(@Query("listId") listId: string) {
+    return this.listItemService.findAll(listId);
   }
 
   @Get(":id")
-  findOne(@Param("id") id: string) {
-    return this.listItemService.findOne(+id);
+  async findOne(@Param("id") id: string) {
+    return this.listItemService.findOne(id);
   }
 
   @Patch(":id")
-  update(@Param("id") id: string, @Body() updateListItemDto: UpdateListItemDto) {
-    return this.listItemService.update(+id, updateListItemDto);
+  async update(@Param("id") id: string, @Body() updateListItemDto: UpdateListItemDto) {
+    return this.listItemService.update(id, updateListItemDto);
   }
 
   @Delete(":id")
-  remove(@Param("id") id: string) {
+  async remove(@Param("id") id: string) {
     return this.listItemService.remove(+id);
   }
 }

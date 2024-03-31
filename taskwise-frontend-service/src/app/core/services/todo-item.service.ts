@@ -2,12 +2,14 @@ import { Injectable } from "@angular/core";
 import { Observable, of } from "rxjs";
 import { IResponse } from "../models/todo.model";
 import { ITodoItem } from "../models/todo-item.model";
+import { HttpClient } from "@angular/common/http";
+import { apiEndpoint } from "../constants/constants";
 
 @Injectable({
   providedIn: "root",
 })
 export class TodoItemService {
-  constructor() {}
+  constructor(private http: HttpClient) {}
 
   getAllTodoItems(id: string | null): Observable<IResponse<ITodoItem[]>> {
     console.log("TodoId:" + JSON.stringify(id));
@@ -17,6 +19,7 @@ export class TodoItemService {
         {
           _id: "1",
           title: "Item1",
+          listId: "",
           description: "Test",
           created_at: new Date(),
           updated_at: new Date(),
@@ -24,6 +27,7 @@ export class TodoItemService {
         {
           _id: "2",
           title: "item2",
+          listId: "",
           description: "Test",
           created_at: new Date(),
           updated_at: new Date(),
@@ -35,24 +39,19 @@ export class TodoItemService {
   }
 
   addTodoItem(data: ITodoItem): Observable<IResponse<ITodoItem>> {
-    console.log("TodoItem:" + JSON.stringify(data));
-
-    const mockResponse: Observable<IResponse<any>> = of({
-      data: [],
-      message: "Created",
-    });
-    return mockResponse;
+    return this.http.post<IResponse<ITodoItem>>(
+      `${apiEndpoint.TodoItemEndpoint.addTodoItem}`,
+      data
+    );
   }
 
   updateTodoItem(
     id: string,
     data: ITodoItem
   ): Observable<IResponse<ITodoItem>> {
-    console.log("TodoItem:" + JSON.stringify(data));
-    const mockResponse: Observable<IResponse<any>> = of({
-      data: [],
-      message: "Updated",
-    });
-    return mockResponse;
+    return this.http.patch<IResponse<ITodoItem>>(
+      `${apiEndpoint.TodoItemEndpoint.addTodoItem}/${id}`,
+      data
+    );
   }
 }
