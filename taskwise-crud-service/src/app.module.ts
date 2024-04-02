@@ -33,7 +33,4 @@ export class AppModule {
   configure(consumer: MiddlewareConsumer) {
     consumer.apply(LoggerMiddleware).forRoutes("/");
   }
-  onInit(): void {
-    this.logger.debug(`Module started successfully`);
-  }
 }
