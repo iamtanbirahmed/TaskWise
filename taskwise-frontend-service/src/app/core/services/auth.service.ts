@@ -2,7 +2,7 @@ import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { ILogin, ILoginResponse } from "../models/auth.mode";
 import { apiEndpoint } from "../constants/constants";
-import { map } from "rxjs";
+import { catchError, map } from "rxjs";
 import { TokenService } from "./token.service";
 
 @Injectable({
@@ -27,7 +27,6 @@ export class AuthService {
       )
       .pipe(
         map((response) => {
-          console.log(response);
           if (response) {
             this.tokenService.setToken(response.access_token);
           }

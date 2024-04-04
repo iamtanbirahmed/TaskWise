@@ -21,11 +21,7 @@
     <div class="bg-green-100 border border-green-500 text-green-600 text-xs font-medium p-1 px-2 rounded-full">{{type}}
     </div>
     } -->
-    <div (click)="onClickEdit(todo)"
-    class="bg-green-100 border border-green-500 text-green-600 text-xs font-medium p-1 px-2 rounded-full cursor-pointer">Edit
-    </div>
-    <div (click)="onClickDetail(todo)"
-    class="bg-green-100 border border-green-500 text-green-600 text-xs font-medium p-1 px-2 rounded-full cursor-pointer">
-    Details
-  </div>
+    <div (click)="onClickEdit(todo)" class="cursor-pointer btn btn-sm btn-icon btn-outline-primary">Edit</div> 
+    <div (click)="onClickDetail(todo)" class="cursor-pointer btn btn-sm btn-icon btn-outline-primary">Details</div>
+    <div (click)="onClickDelete(todo)" class="cursor-pointer btn btn-sm btn-icon btn-outline-danger">Delete</div>
   </div>

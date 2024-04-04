@@ -24,4 +24,7 @@ export class TodoCardComponent {
   onClickEdit(todo: ITodo) {
     this.clickEditEvent.emit(todo);
   }
+  onClickDelete(todo: ITodo) {
+    // TODO: delete
+  }
 }
