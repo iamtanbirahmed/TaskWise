@@ -10,6 +10,6 @@ export interface ITodo {
   title: string;
   description: string;
   status: ITodoType;
-  created_at?: Date;
-  updated_at?: Date;
+  createdAt?: Date | string;
+  updatedAt?: Date | string;
 }

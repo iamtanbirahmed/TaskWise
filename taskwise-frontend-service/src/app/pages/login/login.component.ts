@@ -26,8 +26,11 @@ export class LoginComponent {
 
   constructor(private fb: FormBuilder, private authService: AuthService) {
     this.loginForm = this.fb.group({
-      email: new FormControl("", [Validators.required, Validators.email]),
-      password: new FormControl("", [Validators.required]),
+      email: new FormControl("john@benbria.com", [
+        Validators.required,
+        Validators.email,
+      ]),
+      password: new FormControl("changeme", [Validators.required]),
     });
   }
 
@@ -40,6 +43,7 @@ export class LoginComponent {
         error: (error) => {
           this.errorResponse.show = true;
           this.errorResponse.message = error;
+          this.errorResponse.color = "red";
         },
       });
     } else {

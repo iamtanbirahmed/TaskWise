@@ -2,6 +2,7 @@
     <div class="border-l-4 pl-4">
         <h4 class="font-bold">{{item.title}}</h4>
         <p class="text-gray-400 h-6 overflow-y-hidden">{{item.description}}</p>
+        <p class="text-gray-400 h-6 overflow-y-hidden">{{ createdAt}}</p>
     </div>
     <div>
         <div
@@ -9,8 +10,9 @@
             class="cursor-pointer btn btn-sm btn-icon btn-outline-primary">
             Edit
         </div>
-        <div
+        <!-- <div
             class="cursor-pointer btn btn-sm btn-icon btn-outline-primary">
             Details
-        </div>
+        </div> -->
+        <div (click)="onClickDelete(item)" class="cursor-pointer btn btn-sm btn-icon btn-outline-danger">Delete</div>
     </div>

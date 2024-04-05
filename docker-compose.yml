@@ -10,6 +10,7 @@ services:
     environment:
       MONGO_INITDB_ROOT_USERNAME: root
       MONGO_INITDB_ROOT_PASSWORD: example
+      MONGODB_INITDB_DATABASE: todo
     volumes:
       - ./DB/mongodb:/data/db
   mongo-express:
@@ -23,7 +24,7 @@ services:
       ME_CONFIG_MONGODB_URL: mongodb://root:example@mongodb:27017/
     depends_on:
       - mongodb
-  crud-service:
+  backend-service:
     build:
       context: ./taskwise-crud-service
       dockerfile: taskwise-crud-service.dockerfile
@@ -40,6 +41,18 @@ services:
       BASE_URL: /
       DEBUG_LEVEL: debug
       SERVICE_NAME: TaskWiseCrudService
+      JWT_SECRET: secret
+      JWT_EXPIRES_IN: "84600s"
     depends_on:
       - mongodb
       - mongo-express
+  frontend-service:
+    build:
+      context: ./taskwise-frontend-service
+      dockerfile: taskwise-frontend-service.dockerfile
+    restart: always
+    ports:
+      - "4200:4200"
+    depends_on:
+      - backend-service
+

@@ -16,8 +16,18 @@ export class TodoCardComponent {
   @Input() type: ITodoType = "OPEN";
   @Input() todo!: ITodo;
   @Output() clickEditEvent: EventEmitter<ITodo> = new EventEmitter();
+  @Output() clickDeleteEvent: EventEmitter<ITodo> = new EventEmitter();
+  createdAt: string = new Date().toDateString(); //  Default is set to today for stop breaking
 
   constructor(private router: Router) {}
+
+  ngOnInit() {
+    // The date format should be handled by the backend
+    this.createdAt = this.todo.createdAt
+      ? new Date(this.createdAt).toDateString()
+      : new Date().toDateString();
+  }
+
   onClickDetail(todo: ITodo) {
     this.router.navigate(["/detail", todo._id]);
   }
@@ -25,6 +35,6 @@ export class TodoCardComponent {
     this.clickEditEvent.emit(todo);
   }
   onClickDelete(todo: ITodo) {
-    // TODO: delete
+    this.clickDeleteEvent.emit(todo);
   }
 }

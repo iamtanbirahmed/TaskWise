@@ -112,4 +112,13 @@ export class TodoDetailComponent {
       this.todoForm.markAllAsTouched();
     }
   }
+
+  onDeleteTodoItem(todoItem: ITodoItem) {
+    this.todoItemsService.deleteTodoItem(todoItem._id).subscribe({
+      next: (response) => {
+        console.log(response);
+        this.getTodoDetails();
+      },
+    });
+  }
 }

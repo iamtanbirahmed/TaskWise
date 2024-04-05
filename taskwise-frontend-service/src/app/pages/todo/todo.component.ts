@@ -47,7 +47,6 @@ export class TodoComponent implements OnInit {
   getAllTodos() {
     this.todoService.getAllTodo(this.filterByStatus).subscribe({
       next: (response) => {
-        console.log(response);
         this.todos = response.data;
       },
     });
@@ -66,6 +65,17 @@ export class TodoComponent implements OnInit {
     this.getAllTodos();
   }
 
+  onDelete(todo: ITodo) {
+    this.todoService.deleteTodo(todo._id).subscribe({
+      next: (response) => {
+        this.getAllTodos();
+      },
+    });
+  }
+
+  /**
+   * Submit the data or update if the data is already there
+   */
   onSubmit() {
     if (this.todoForm.valid) {
       if (this.todoId) {

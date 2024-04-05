@@ -9,7 +9,7 @@ import { Component, EventEmitter, Input, input, Output } from "@angular/core";
 })
 export class AlertComponent {
   @Input() message: string = "This is an alert";
-  @Input() color: string = "red";
+  @Input() color: string = "green";
   @Output() closeEvent: EventEmitter<boolean> = new EventEmitter();
 
   onCloseAlert() {

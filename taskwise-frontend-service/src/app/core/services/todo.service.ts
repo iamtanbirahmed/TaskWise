@@ -39,4 +39,10 @@ export class TodoService {
       data
     );
   }
+
+  deleteTodo(id: string | undefined): Observable<IResponse<ITodo>> {
+    return this.http.delete<IResponse<ITodo>>(
+      `${apiEndpoint.TodoEndpoint.deleteTodo}/${id}`
+    );
+  }
 }

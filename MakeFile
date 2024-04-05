@@ -1,2 +1,8 @@
 run:
 	docker compose up -d
+stop:
+	docker compose down
+test-be:
+	cd ./taskwise-crud-service && npm run test;
+test-fe:
+	cd ./taskwise-frontend-service && npm run test;

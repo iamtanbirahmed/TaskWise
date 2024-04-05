@@ -50,8 +50,14 @@ export class TodoItemService {
     data: ITodoItem
   ): Observable<IResponse<ITodoItem>> {
     return this.http.patch<IResponse<ITodoItem>>(
-      `${apiEndpoint.TodoItemEndpoint.addTodoItem}/${id}`,
+      `${apiEndpoint.TodoItemEndpoint.updateTodoItem}/${id}`,
       data
+    );
+  }
+
+  deleteTodoItem(id: string | undefined): Observable<IResponse<ITodoItem>> {
+    return this.http.delete<IResponse<ITodoItem>>(
+      `${apiEndpoint.TodoItemEndpoint.deleteTodoItem}/${id}`
     );
   }
 }

@@ -3,6 +3,6 @@ export interface ITodoItem {
   title: string;
   listId: string;
   description: string;
-  created_at?: Date;
-  updated_at?: Date;
+  createdAt?: Date;
+  updatedAt?: Date;
 }
