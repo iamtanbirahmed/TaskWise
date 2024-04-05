@@ -9,11 +9,13 @@ export class ListItemService {
   private logger: Logger = new Logger(ListItemService.name);
   constructor(@InjectModel(ListItem.name) private readonly listItemModel: Model<ListItemDocument>) {}
 
-  async create(createListItemDto: CreateListItemDto) {
+  async create(userId: string, createListItemDto: CreateListItemDto): Promise<ListItem> {
     const createData = {
       title: createListItemDto.title,
       description: createListItemDto.description,
       listId: createListItemDto.listId,
+      createdBy: userId,
+      updatedBy: userId,
       createdAt: new Date(),
       updatedAt: new Date(),
     };
@@ -21,36 +23,33 @@ export class ListItemService {
     return createListItem.save();
   }
 
-  async findAll(listId: string) {
+  async findAll(userId: string, listId: string): Promise<ListItem[]> {
     this.logger.debug(` listId: ${JSON.stringify(listId)}`);
-    const data = await this.listItemModel
+    return await this.listItemModel
       .find({
         listId: listId,
+        createdBy: userId,
       })
       .exec();
-    const response = {
-      data: data,
-      message: data.length,
-    };
-    return response;
   }
 
-  async findOne(id: string) {
-    return this.listItemModel.findById(id);
+  async findOne(userId: string, id: string): Promise<ListItem | null> {
+    return this.listItemModel.findOne({ _id: id, createdBy: userId }).exec();
   }
 
-  async update(id: string, updateListItemDto: UpdateListItemDto) {
+  async update(userId: string, id: string, updateListItemDto: UpdateListItemDto): Promise<ListItem | null> {
     this.logger.debug(` Updatedto: ${JSON.stringify(updateListItemDto)}`);
     const updateData = {
       title: updateListItemDto.title,
       description: updateListItemDto.description,
       listId: updateListItemDto.listId,
       updatedAt: new Date(),
+      updatedBy: userId,
     };
-    return await this.listItemModel.findByIdAndUpdate(id, updateData, { new: true }).exec(); // return the updated document instead of the original one.
+    return await this.listItemModel.findOneAndUpdate({ _id: id, createdBy: userId }, updateData, { new: true }).exec(); // return the updated document instead of the original one., { new: true}
   }
 
-  async remove(id: number): Promise<ListItem | null> {
-    return this.listItemModel.findByIdAndDelete(id).exec();
+  async remove(userId: string, id: string): Promise<ListItem | null> {
+    return this.listItemModel.findOneAndDelete({ _id: id, createdBy: userId }).exec();
   }
 }

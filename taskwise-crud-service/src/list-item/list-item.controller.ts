@@ -1,34 +1,66 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, ValidationPipe, Query } from "@nestjs/common";
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+  ValidationPipe,
+  Query,
+  UseGuards,
+  HttpCode,
+  HttpStatus,
+  Req,
+} from "@nestjs/common";
 import { ListItemService } from "./list-item.service";
 import { CreateListItemDto } from "./dto/create-list-item.dto";
 import { UpdateListItemDto } from "./dto/update-list-item.dto";
+import { AuthGuard } from "src/guards/auth/auth.guard";
+import { IResponse } from "src/@types";
+import { ListItem } from "./schemas/list-item.schema";
 
+@UseGuards(AuthGuard)
 @Controller("api/v1/list-item")
 export class ListItemController {
   constructor(private readonly listItemService: ListItemService) {}
 
   @Post()
-  async create(@Body() createListItemDto: CreateListItemDto) {
-    return this.listItemService.create(createListItemDto);
+  @HttpCode(HttpStatus.CREATED)
+  async create(@Req() req: any, @Body() createListItemDto: CreateListItemDto): Promise<IResponse<ListItem>> {
+    const userId = req.user.sub;
+    return { data: await this.listItemService.create(userId, createListItemDto), message: "Created" };
   }
 
   @Get()
-  async findAll(@Query("listId") listId: string) {
-    return this.listItemService.findAll(listId);
+  @HttpCode(HttpStatus.OK)
+  async findAll(@Req() req: any, @Query("listId") listId: string): Promise<IResponse<ListItem[]>> {
+    const userId = req.user.sub;
+    return { data: await this.listItemService.findAll(userId, listId) };
   }
 
   @Get(":id")
-  async findOne(@Param("id") id: string) {
-    return this.listItemService.findOne(id);
+  @HttpCode(HttpStatus.OK)
+  async findOne(@Req() req: any, @Param("id") id: string): Promise<IResponse<ListItem | null>> {
+    const userId = req.user.sub;
+    return { data: await this.listItemService.findOne(userId, id) };
   }
 
   @Patch(":id")
-  async update(@Param("id") id: string, @Body() updateListItemDto: UpdateListItemDto) {
-    return this.listItemService.update(id, updateListItemDto);
+  @HttpCode(HttpStatus.OK)
+  async update(
+    @Req() req: any,
+    @Param("id") id: string,
+    @Body() updateListItemDto: UpdateListItemDto,
+  ): Promise<IResponse<ListItem | null>> {
+    const userId = req.user.sub;
+    return { data: await this.listItemService.update(userId, id, updateListItemDto), message: "Updated" };
   }
 
   @Delete(":id")
-  async remove(@Param("id") id: string) {
-    return this.listItemService.remove(+id);
+  @HttpCode(HttpStatus.OK)
+  async remove(@Req() req: any, @Param("id") id: string): Promise<IResponse<ListItem | null>> {
+    const userId = req.user.sub;
+    return { data: await this.listItemService.remove(userId, id), message: "Deleted" };
   }
 }

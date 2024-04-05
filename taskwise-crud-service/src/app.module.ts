@@ -8,6 +8,7 @@ import { ListItemModule } from "./list-item/list-item.module";
 import { AuthModule } from "./auth/auth.module";
 import { UserModule } from "./user/user.module";
 import { LoggerMiddleware } from "./middlewares/logger/logger.middleware";
+import { JwtService } from "@nestjs/jwt";
 
 @Module({
   imports: [
@@ -26,7 +27,7 @@ import { LoggerMiddleware } from "./middlewares/logger/logger.middleware";
     UserModule,
   ],
   controllers: [AppController],
-  providers: [AppService, ConfigService],
+  providers: [AppService, ConfigService, JwtService],
 })
 export class AppModule {
   logger: Logger = new Logger(AppModule.name);

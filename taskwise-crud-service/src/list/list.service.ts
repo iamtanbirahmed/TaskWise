@@ -1,9 +1,10 @@
-import { Injectable, Logger } from "@nestjs/common";
+import { Injectable, Logger, Request } from "@nestjs/common";
 import { CreateListDto } from "./dto/create-list.dto";
 import { UpdateListDto } from "./dto/update-list.dto";
 import { InjectModel } from "@nestjs/mongoose";
 import { List, ListDocument } from "./schemas/list.schema";
-import mongoose, { Model } from "mongoose";
+import mongoose, { Aggregate, Model } from "mongoose";
+import { IResponse } from "src/@types";
 
 @Injectable()
 export class ListService {
@@ -15,11 +16,13 @@ export class ListService {
    * @param createListDto
    * @returns
    */
-  async create(createListDto: CreateListDto) {
+  async create(userId: string, createListDto: CreateListDto): Promise<List> {
     const createData = {
       title: createListDto.title,
       description: createListDto.description,
       status: createListDto.status,
+      createdBy: userId,
+      updatedBy: userId,
       createdAt: new Date(),
       updatedAt: new Date(),
     };
@@ -27,37 +30,33 @@ export class ListService {
     return createList.save();
   }
 
-  async findAll(): Promise<any> {
-    const data = await this.listModel.find().exec();
-    const response = {
-      data: data,
-      message: data.length,
-    };
-    return response;
+  async findAll(userId: string): Promise<List[]> {
+    this.logger.debug(`UserId: ${JSON.stringify(userId)}`);
+    return await this.listModel.find({ createdBy: userId }).exec();
   }
 
-  async findOne(id: string): Promise<List | null> {
-    return this.listModel.findById(id).exec();
+  async findOne(userId: string, id: string): Promise<List | null> {
+    return await this.listModel.findOne({ _id: id, createdBy: userId }).exec();
   }
 
-  async update(id: string, updateListDto: UpdateListDto): Promise<List | null> {
+  async update(userId: string, id: string, updateListDto: UpdateListDto): Promise<List | null> {
     this.logger.debug(` Updatedto${JSON.stringify(updateListDto)}`);
     const updateData = {
       title: updateListDto.title,
       description: updateListDto.description,
       status: updateListDto.status,
       updatedAt: new Date(),
+      updatedBy: userId, // add the updatedBy field to the updateData object.
     };
-    return this.listModel.findByIdAndUpdate(id, updateData, { new: true }).exec(); // return the updated document instead of the original one.
+    return this.listModel.findOneAndUpdate({ _id: id, createdBy: userId }, updateData, { new: true }).exec(); // return the updated document instead of the original one.
   }
 
-  async findListDetails(listId: string): Promise<any> {
+  async findListDetails(userId: string, listId: string): Promise<any> {
     // aggregation pipeline to find all items
     const ObjectId = mongoose.Types.ObjectId;
-    this.logger.debug(`ListId ${JSON.stringify(typeof listId)}`);
     const data = await this.listModel
       .aggregate([
-        { $match: { _id: new ObjectId(listId) } },
+        { $match: { _id: new ObjectId(listId), createdBy: userId } },
         {
           $addFields: {
             key: { $toString: "$_id" },
@@ -86,41 +85,11 @@ export class ListService {
         },
       ])
       .exec();
-    return {
-      data: data[0],
-      message: data.length,
-    };
+    if (data.length > 1) throw new Error("Multiple documents with the same Id");
+    return data[0];
   }
 
-  async remove(id: string): Promise<List | null> {
-    return this.listModel.findByIdAndDelete(id).exec();
+  async remove(userId: string, id: string): Promise<List | null> {
+    return this.listModel.findOneAndDelete({ _id: id, createdBy: userId }).exec();
   }
 }
-
-/**
- * 
- * 
- * 
- * {
-          $lookup: {
-            from: "listitems", // Collection name of List Items
-            localField: "_id",
-            foreignField: "listId",
-            as: "items",
-          },
-        },
-        {
-          $project: {
-            items: 1,
-            title: 1,
-            description: 1,
-            status: 1,
-            createdAt: 1,
-            updatedAt: 1,
-            createdBy: 1,
-            updatedBy: 1,
-            _id: 1,
-          },
-        },
- * 
- */

@@ -1,5 +1,5 @@
 import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
-import { HydratedDocument } from "mongoose";
+import { HydratedDocument, Model } from "mongoose";
 
 export type ListItemDocument = HydratedDocument<ListItem>;
 @Schema()
@@ -11,11 +11,11 @@ export class ListItem {
   @Prop()
   description: string;
   @Prop()
-  createAt: Date;
+  createdAt: Date;
   @Prop()
   createdBy: string;
   @Prop()
-  updateAt: Date;
+  updatedAt: Date;
   @Prop()
   updatedBy: string;
 }

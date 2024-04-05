@@ -1,22 +1,26 @@
 import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
-import { HydratedDocument } from "mongoose";
+import { HydratedDocument, isValidObjectId } from "mongoose";
 import { TaskStatus } from "../dto/task-status.enum";
+import { IsDate, IsNotEmpty } from "class-validator";
 
 export type ListDocument = HydratedDocument<List>;
 @Schema()
 export class List {
   @Prop()
+  @IsNotEmpty()
   title: string;
   @Prop()
   description: string;
   @Prop()
   status: TaskStatus;
   @Prop()
-  createAt: Date;
+  @IsDate()
+  createdAt: Date;
   @Prop()
-  createdBy: string;
+  createdBy: string; // TODO: add annotated validation
   @Prop()
-  updateAt: Date;
+  @IsDate()
+  updatedAt: Date;
   @Prop()
   updatedBy: string;
 }
