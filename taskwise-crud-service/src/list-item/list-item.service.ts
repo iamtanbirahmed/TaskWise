@@ -1,8 +1,8 @@
-import { Injectable, Logger } from "@nestjs/common";
+import { BadRequestException, Injectable, Logger } from "@nestjs/common";
 import { CreateListItemDto } from "./dto/create-list-item.dto";
 import { UpdateListItemDto } from "./dto/update-list-item.dto";
 import { InjectModel } from "@nestjs/mongoose";
-import { Model } from "mongoose";
+import mongoose, { Model } from "mongoose";
 import { ListItem, ListItemDocument } from "./schemas/list-item.schema";
 @Injectable()
 export class ListItemService {
@@ -19,22 +19,23 @@ export class ListItemService {
       createdAt: new Date(),
       updatedAt: new Date(),
     };
-    const createListItem = new this.listItemModel(createData);
-    return createListItem.save();
+    return this.listItemModel.create(createData);
   }
 
   async findAll(userId: string, listId: string): Promise<ListItem[]> {
     this.logger.debug(` listId: ${JSON.stringify(listId)}`);
-    return await this.listItemModel
-      .find({
-        listId: listId,
-        createdBy: userId,
-      })
-      .exec();
+    return await this.listItemModel.find({
+      listId: listId,
+      createdBy: userId,
+    });
   }
 
   async findOne(userId: string, id: string): Promise<ListItem | null> {
-    return this.listItemModel.findOne({ _id: id, createdBy: userId }).exec();
+    const validListId = mongoose.isValidObjectId(id);
+    if (!validListId) {
+      throw new BadRequestException(`id: ${id} is not a valid`);
+    }
+    return await this.listItemModel.findOne({ _id: id, createdBy: userId });
   }
 
   async update(userId: string, id: string, updateListItemDto: UpdateListItemDto): Promise<ListItem | null> {
@@ -46,10 +47,13 @@ export class ListItemService {
       updatedAt: new Date(),
       updatedBy: userId,
     };
-    return await this.listItemModel.findOneAndUpdate({ _id: id, createdBy: userId }, updateData, { new: true }).exec(); // return the updated document instead of the original one., { new: true}
+    return await this.listItemModel.findOneAndUpdate({ _id: id, createdBy: userId }, updateData, {
+      new: true,
+      runValidators: true,
+    });
   }
 
   async remove(userId: string, id: string): Promise<ListItem | null> {
-    return this.listItemModel.findOneAndDelete({ _id: id, createdBy: userId }).exec();
+    return await this.listItemModel.findOneAndDelete({ _id: id, createdBy: userId });
   }
 }

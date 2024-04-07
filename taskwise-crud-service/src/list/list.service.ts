@@ -1,4 +1,4 @@
-import { Injectable, Logger, Request } from "@nestjs/common";
+import { BadRequestException, Injectable, Logger, Request } from "@nestjs/common";
 import { CreateListDto } from "./dto/create-list.dto";
 import { UpdateListDto } from "./dto/update-list.dto";
 import { InjectModel } from "@nestjs/mongoose";
@@ -26,17 +26,21 @@ export class ListService {
       createdAt: new Date(),
       updatedAt: new Date(),
     };
-    const createList = new this.listModel(createData);
-    return createList.save();
+    return this.listModel.create(createData);
   }
 
   async findAll(userId: string): Promise<List[]> {
     this.logger.debug(`UserId: ${JSON.stringify(userId)}`);
-    return await this.listModel.find({ createdBy: userId }).exec();
+    return await this.listModel.find({ createdBy: userId });
   }
 
   async findOne(userId: string, id: string): Promise<List | null> {
-    return await this.listModel.findOne({ _id: id, createdBy: userId }).exec();
+    const validListId = mongoose.isValidObjectId(id);
+    if (!validListId) {
+      throw new BadRequestException(`id: ${id} is not a valid`);
+    }
+
+    return await this.listModel.findOne({ _id: id, createdBy: userId });
   }
 
   async update(userId: string, id: string, updateListDto: UpdateListDto): Promise<List | null> {
@@ -48,7 +52,10 @@ export class ListService {
       updatedAt: new Date(),
       updatedBy: userId, // add the updatedBy field to the updateData object.
     };
-    return this.listModel.findOneAndUpdate({ _id: id, createdBy: userId }, updateData, { new: true }).exec(); // return the updated document instead of the original one.
+    return await this.listModel.findOneAndUpdate({ _id: id, createdBy: userId }, updateData, {
+      new: true,
+      runValidators: true,
+    }); // return the updated document instead of the original one.
   }
 
   async findListDetails(userId: string, listId: string): Promise<any> {
@@ -90,6 +97,6 @@ export class ListService {
   }
 
   async remove(userId: string, id: string): Promise<List | null> {
-    return this.listModel.findOneAndDelete({ _id: id, createdBy: userId }).exec();
+    return await this.listModel.findOneAndDelete({ _id: id, createdBy: userId });
   }
 }

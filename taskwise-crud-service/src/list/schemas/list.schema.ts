@@ -6,6 +6,7 @@ import { IsDate, IsNotEmpty } from "class-validator";
 export type ListDocument = HydratedDocument<List>;
 @Schema()
 export class List {
+  _id?: string;
   @Prop()
   @IsNotEmpty()
   title: string;

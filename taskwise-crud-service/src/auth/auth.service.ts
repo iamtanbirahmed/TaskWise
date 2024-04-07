@@ -2,7 +2,7 @@ import { Injectable, UnauthorizedException } from "@nestjs/common";
 import { JwtService } from "@nestjs/jwt";
 import { User } from "src/user/schemas/user.schema";
 import { UserService } from "src/user/user.service";
-import { comparePassword } from "src/utils/bcrypt";
+import * as bcrypt from "bcrypt";
 
 @Injectable()
 export class AuthService {
@@ -24,7 +24,7 @@ export class AuthService {
     if (user == null) {
       throw new UnauthorizedException();
     }
-    const isMatch = comparePassword(pass, user.password);
+    const isMatch = this.comparePassword(pass, user.password);
     if (!isMatch) {
       throw new UnauthorizedException();
     }
@@ -36,5 +36,15 @@ export class AuthService {
     return {
       access_token: await this.jwtService.signAsync(payload),
     };
+  }
+
+  private async encodedPassword(password: string): Promise<string> {
+    const SALT = bcrypt.genSaltSync();
+    return bcrypt.hash(password, SALT);
+  }
+
+  // TODO: fix the access level: this should be private
+  comparePassword(password: string, hash: string) {
+    return bcrypt.compareSync(password, hash);
   }
 }
