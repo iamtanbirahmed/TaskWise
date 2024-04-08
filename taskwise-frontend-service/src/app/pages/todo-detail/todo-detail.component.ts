@@ -70,6 +70,12 @@ export class TodoDetailComponent {
     this.isSlidePanelOpen = false;
   }
 
+  addTodoItemList() {
+    this.currentTodoItemId = null;
+    this.todoForm.reset();
+    this.openSlidePanel();
+  }
+
   onLoadTodoForm(item: ITodoItem) {
     console.log(item);
     this.currentTodoItemId = item._id!!;

@@ -51,7 +51,6 @@ export class TodoComponent implements OnInit {
       },
     });
   }
-
   openSlidePanel() {
     this.isSlidePanelOpen = true;
   }
@@ -79,6 +78,7 @@ export class TodoComponent implements OnInit {
    */
   onSubmit() {
     if (this.todoForm.valid) {
+      console.log(this.todoId);
       if (this.todoId) {
         this.todoService
           .updateTodo(this.todoId, this.todoForm.value)
@@ -99,6 +99,12 @@ export class TodoComponent implements OnInit {
     } else {
       this.todoForm.markAllAsTouched();
     }
+  }
+
+  addTodoList() {
+    this.todoId = null;
+    this.todoForm.reset();
+    this.openSlidePanel();
   }
 
   onLoadTodoForm(item: ITodo) {
