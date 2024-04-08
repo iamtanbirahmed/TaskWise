@@ -9,18 +9,15 @@ import { AuthModule } from "./auth/auth.module";
 import { UserModule } from "./user/user.module";
 import { LoggerMiddleware } from "./middlewares/logger/logger.middleware";
 import { JwtService } from "@nestjs/jwt";
+import { DatabaseModule } from "./database/database.module";
 
 @Module({
   imports: [
-    MongooseModule.forRootAsync({
-      imports: [ConfigModule],
-      useFactory: async (configService: ConfigService) => ({
-        uri: configService.get<string>("MONGODB_URI"),
-        dbName: configService.get<string>("MONGODB_DB_NAME"),
-      }),
-      inject: [ConfigService],
+    DatabaseModule,
+    ConfigModule.forRoot({
+      envFilePath: `.env`,
+      isGlobal: true,
     }),
-    ConfigModule.forRoot({ isGlobal: true }),
     ListModule,
     ListItemModule,
     AuthModule,

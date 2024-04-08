@@ -32,9 +32,10 @@ services:
     ports:
       - "3000:3000"
     environment:
-      NODE_ENVIRONMENT: development
+      NODE_ENV: development
       MONGODB_URI: mongodb://root:example@mongodb:27017
       MONGODB_DB_NAME: todo
+      MONGODB_TEST_DB_NAME: todo
       MONGODB_USERNAME: root
       MONGODB_PASSWORD: example
       PORT: 3000
