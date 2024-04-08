@@ -1,4 +1,4 @@
-import { Injectable, UnauthorizedException } from "@nestjs/common";
+import { Injectable, Logger, UnauthorizedException } from "@nestjs/common";
 import { JwtService } from "@nestjs/jwt";
 import { User } from "src/user/schemas/user.schema";
 import { UserService } from "src/user/user.service";
@@ -6,6 +6,7 @@ import * as bcrypt from "bcrypt";
 
 @Injectable()
 export class AuthService {
+  private logger: Logger = new Logger(AuthService.name);
   constructor(
     private userService: UserService,
     private jwtService: JwtService,
@@ -17,6 +18,29 @@ export class AuthService {
    * @param pass
    * @returns
    */
+
+  async onModuleInit() {
+    this.userService.deleteAll();
+    const users: any[] = [
+      {
+        username: "john@benbria.com",
+        password: await this.encodedPassword("changeme"),
+      },
+      {
+        username: "alice@benbria.com",
+        password: await this.encodedPassword("changeme"),
+      },
+      {
+        username: "bob@benbria.com",
+        password: await this.encodedPassword("changeme"),
+      },
+    ];
+    this.logger.warn("!!!**FOR TEST PURPOSE ONLY**!!!");
+    this.logger.warn("Initializing users...!!");
+    const response = await this.userService.createMany(users);
+    this.logger.warn(`Users initialized ${JSON.stringify(response)}`);
+  }
+
   async signIn(username: string, pass: string): Promise<any> {
     const user: User | null = await this.userService.findOne(username);
 

@@ -25,6 +25,6 @@ export class HeaderComponent {
     this.authService.onLogout();
   }
   onClickTodo() {
-    this.router.navigate(["/todo"]);
+    this.router.navigate(["/"]);
   }
 }

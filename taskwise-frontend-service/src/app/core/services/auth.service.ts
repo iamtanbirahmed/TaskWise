@@ -37,10 +37,10 @@ export class AuthService {
 
   onLogout() {
     this.tokenService.removeToken();
-    this.http.post(`${apiEndpoint.AuthEndpoint.logout}`, "").subscribe({
-      next: (response) => {
-        console.error(response);
-      },
-    });
+    // this.http.post(`${apiEndpoint.AuthEndpoint.logout}`, "").subscribe({
+    //   next: (response) => {
+    //     console.error(response);
+    //   },
+    // });
   }
 }

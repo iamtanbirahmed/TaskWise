@@ -13,7 +13,7 @@ export const listStub = (): ListDocument => {
     status: TaskStatus.DONE,
     createdAt: new Date("2024-04-06T14:30:08"),
     updatedAt: new Date("2024-04-06T14:30:08"),
-    updatedBy: "",
-    createdBy: "",
+    updatedBy: "660b767f8c784fed5c58e739",
+    createdBy: "660b767f8c784fed5c58e739", // dummy id added for test purposes
   };
 };

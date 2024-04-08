@@ -1,4 +1,5 @@
 export const environment = {
   production: false,
-  apiUrl: "backend-service:3000/api/v1",
+  config: "docker",
+  apiUrl: "http://0.0.0.0:3000/api/v1",
 };

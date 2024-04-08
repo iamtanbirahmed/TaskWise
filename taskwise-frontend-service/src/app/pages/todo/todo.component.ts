@@ -60,6 +60,7 @@ export class TodoComponent implements OnInit {
     this.isSlidePanelOpen = false;
   }
 
+  // TODO: still requires implementation
   onFilterByStatus(status: string) {
     this.filterByStatus = status;
     this.getAllTodos();

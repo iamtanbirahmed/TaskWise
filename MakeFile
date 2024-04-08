@@ -2,6 +2,10 @@ run:
 	docker compose up -d
 stop:
 	docker compose down
+
+run-db:
+	docker compose up -d mongodb mongo-express
+
 test-be:
 	cd ./taskwise-crud-service && npm run test;
 test-fe:

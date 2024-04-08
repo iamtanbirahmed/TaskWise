@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable, Logger, Request } from "@nestjs/common";
+import { BadRequestException, Injectable, InternalServerErrorException, Logger, Request } from "@nestjs/common";
 import { CreateListDto } from "./dto/create-list.dto";
 import { UpdateListDto } from "./dto/update-list.dto";
 import { InjectModel } from "@nestjs/mongoose";
@@ -61,37 +61,36 @@ export class ListService {
   async findListDetails(userId: string, listId: string): Promise<any> {
     // aggregation pipeline to find all items
     const ObjectId = mongoose.Types.ObjectId;
-    const data = await this.listModel
-      .aggregate([
-        { $match: { _id: new ObjectId(listId), createdBy: userId } },
-        {
-          $addFields: {
-            key: { $toString: "$_id" },
-          },
+    const data = await this.listModel.aggregate([
+      { $match: { _id: new ObjectId(listId), createdBy: userId } },
+      {
+        $addFields: {
+          key: { $toString: "$_id" },
         },
-        {
-          $lookup: {
-            from: "listitems", // Collection name of List Items
-            localField: "key",
-            foreignField: "listId",
-            as: "items",
-          },
+      },
+      {
+        $lookup: {
+          from: "listitems", // Collection name of List Items
+          localField: "key",
+          foreignField: "listId",
+          as: "items",
         },
-        {
-          $project: {
-            items: 1,
-            title: 1,
-            description: 1,
-            status: 1,
-            createdAt: 1,
-            updatedAt: 1,
-            createdBy: 1,
-            updatedBy: 1,
-            _id: 1,
-          },
+      },
+      {
+        $project: {
+          items: 1,
+          title: 1,
+          description: 1,
+          status: 1,
+          createdAt: 1,
+          updatedAt: 1,
+          createdBy: 1,
+          updatedBy: 1,
+          _id: 1,
         },
-      ])
-      .exec();
+      },
+    ]);
+    if (data.length === 0) throw new BadRequestException("List not found");
     if (data.length > 1) throw new Error("Multiple documents with the same Id");
     return data[0];
   }

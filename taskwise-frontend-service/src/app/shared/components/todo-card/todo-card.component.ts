@@ -23,7 +23,7 @@ export class TodoCardComponent {
 
   ngOnInit() {
     // The date format should be handled by the backend
-    this.createdAt = this.todo.createdAt
+    this.todo.createdAt = this.todo.createdAt
       ? new Date(this.createdAt).toDateString()
       : new Date().toDateString();
   }
