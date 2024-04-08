@@ -26,11 +26,11 @@ test:
 
 test-be:
 	@echo "Running backend tests..."
-	@cd ./taskwise-crud-service && npm run test
+	@cd ./taskwise-crud-service && npm install && npm run test
 
 test-fe:
 	@echo "Running frontend tests..."
-	@cd ./taskwise-frontend-service && npm run test
+	@cd ./taskwise-frontend-service && npm install && npm run test
 
 test-e2e: run-db
 	@echo "Running end-to-end tests..."
