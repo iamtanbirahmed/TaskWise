@@ -2,19 +2,19 @@
 
 run:
 	@echo "Starting containers..."
-	@docker-compose up -d
+	@docker compose up -d
 
 stop:
 	@echo "Stopping containers..."
-	@docker-compose down
+	@docker compose down
 
 run-db:
 	@echo "Starting MongoDB and Mongo Express containers..."
-	@docker-compose up -d mongodb mongo-express
+	@docker compose up -d mongodb mongo-express
 
 run-backend:
 	@echo "Starting backend service containers..."
-	@docker-compose up -d mongodb mongo-express backend-service
+	@docker compose up -d mongodb mongo-express backend-service
 
 install:
 	@echo "Installing dependencies..."
