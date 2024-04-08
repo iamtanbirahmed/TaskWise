@@ -20,25 +20,31 @@ export class AuthService {
    */
 
   async onModuleInit() {
-    this.userService.deleteAll();
-    const users: any[] = [
-      {
-        username: "john@benbria.com",
-        password: await this.encodedPassword("changeme"),
-      },
-      {
-        username: "alice@benbria.com",
-        password: await this.encodedPassword("changeme"),
-      },
-      {
-        username: "bob@benbria.com",
-        password: await this.encodedPassword("changeme"),
-      },
-    ];
-    this.logger.warn("!!!**FOR TEST PURPOSE ONLY**!!!");
-    this.logger.warn("Initializing users...!!");
-    const response = await this.userService.createMany(users);
-    this.logger.warn(`Users initialized ${JSON.stringify(response)}`);
+    let usersResponse = await this.userService.findAll();
+    if (usersResponse.length <= 0) {
+      // this.userService.deleteAll();
+      const users: any[] = [
+        {
+          username: "john@test.com",
+          password: await this.encodedPassword("changeme"),
+        },
+        {
+          username: "alice@test.com",
+          password: await this.encodedPassword("changeme"),
+        },
+        {
+          username: "bob@test.com",
+          password: await this.encodedPassword("changeme"),
+        },
+      ];
+      this.logger.warn("!!!**FOR TEST PURPOSE ONLY**!!!");
+      this.logger.warn("Initializing users...!!");
+      const response = await this.userService.createMany(users);
+      this.logger.warn(`Users initialized ${JSON.stringify(response)}`);
+    } else {
+      this.logger.warn("Users already initialized!!!");
+      this.logger.warn(JSON.stringify(usersResponse));
+    }
   }
 
   async signIn(username: string, pass: string): Promise<any> {

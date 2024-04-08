@@ -36,7 +36,7 @@ describe("ListItemController (e2e)", () => {
     await dbConnection.collection("lists").deleteMany({});
     await dbConnection.collection("listitems").deleteMany({});
     const response = await request(app.getHttpServer()).post("/api/v1/auth/login").send({
-      username: "john@benbria.com",
+      username: "john@test.com",
       password: "changeme",
     });
     accessToken = response.body.access_token;

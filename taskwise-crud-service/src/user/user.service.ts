@@ -8,7 +8,11 @@ export class UserService {
   constructor(@InjectModel(User.name) private readonly userModel: Model<UserDocument>) {}
 
   async findOne(username: string): Promise<User | null> {
-    return this.userModel.findOne({ username: username }).exec();
+    return await this.userModel.findOne({ username: username });
+  }
+
+  async findAll() {
+    return await this.userModel.find({});
   }
 
   async createMany(users: any[]): Promise<any> {

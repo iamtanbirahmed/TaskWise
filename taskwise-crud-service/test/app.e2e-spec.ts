@@ -23,7 +23,7 @@ describe("AppController (e2e)", () => {
 
   beforeEach(async () => {
     const response = await request(app.getHttpServer()).post("/api/v1/auth/login").send({
-      username: "john@benbria.com",
+      username: "john@test.com",
       password: "changeme",
     });
     accessToken = response.body.access_token;

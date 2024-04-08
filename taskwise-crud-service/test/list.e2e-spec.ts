@@ -35,7 +35,7 @@ describe("ListController (e2e)", () => {
     // Making sure no other data is present before test
     await dbConnection.collection("lists").deleteMany({});
     const response = await request(app.getHttpServer()).post("/api/v1/auth/login").send({
-      username: "john@benbria.com",
+      username: "john@test.com",
       password: "changeme",
     });
     accessToken = response.body.access_token;
