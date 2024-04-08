@@ -12,6 +12,8 @@ It will run docker containers for all the components. The application will be ac
 
 ```bash
 # To run the entire application
+$ git clone https://github.com/iamtanbirahmed/TaskWise.git
+$ cd TaskWise
 $ make run
 ```
 
