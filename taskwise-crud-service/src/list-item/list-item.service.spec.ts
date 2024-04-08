@@ -5,6 +5,7 @@ import { ListItem, ListItemDocument } from "./schemas/list-item.schema";
 import { listItemStub } from "./stubs/list-item.stub";
 import mongoose, { Model } from "mongoose";
 import { BadRequestException } from "@nestjs/common";
+import { ListService } from "src/list/list.service";
 
 jest.useFakeTimers().setSystemTime(new Date(listItemStub().createdAt));
 const mockListItemModel = {
@@ -14,6 +15,7 @@ const mockListItemModel = {
   findOneAndUpdate: jest.fn().mockResolvedValue(listItemStub()),
   findOneAndDelete: jest.fn().mockResolvedValue(listItemStub()),
 };
+
 describe("ListItemService", () => {
   let listItemService: ListItemService;
   let model: Model<ListItemDocument>;

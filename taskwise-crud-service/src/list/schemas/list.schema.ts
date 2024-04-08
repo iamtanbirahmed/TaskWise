@@ -11,6 +11,7 @@ export class List {
   @IsNotEmpty()
   title: string;
   @Prop()
+  @IsNotEmpty()
   description: string;
   @Prop()
   status: TaskStatus;

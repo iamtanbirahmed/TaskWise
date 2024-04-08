@@ -61,6 +61,12 @@ export class ListService {
   async findListDetails(userId: string, listId: string): Promise<any> {
     // aggregation pipeline to find all items
     const ObjectId = mongoose.Types.ObjectId;
+
+    const validListId = mongoose.isValidObjectId(listId);
+    if (!validListId) {
+      throw new BadRequestException(`id: ${listId} is not a valid`);
+    }
+
     const data = await this.listModel.aggregate([
       { $match: { _id: new ObjectId(listId), createdBy: userId } },
       {
@@ -96,6 +102,10 @@ export class ListService {
   }
 
   async remove(userId: string, id: string): Promise<List | null> {
+    const validListId = mongoose.isValidObjectId(id);
+    if (!validListId) {
+      throw new BadRequestException(`id: ${id} is not a valid`);
+    }
     return await this.listModel.findOneAndDelete({ _id: id, createdBy: userId });
   }
 }

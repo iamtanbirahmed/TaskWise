@@ -9,5 +9,6 @@ import { JwtService } from "@nestjs/jwt";
   imports: [MongooseModule.forFeature([{ name: List.name, schema: ListSchema }])],
   controllers: [ListController],
   providers: [ListService, JwtService],
+  exports: [ListService],
 })
 export class ListModule {}
