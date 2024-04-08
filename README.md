@@ -49,6 +49,17 @@ e2e tests are only added to the backend service. It requires the `Database` to b
 make test-e2e
 ```
 
+## Stop and Clean up
+
+```bash
+# To stop application
+make stop
+
+# To clean up docker images & containers
+make clean
+
+```
+
 ## Credentials
 
 Three users are automatically added to the `Database` during start-up for convenienece.
